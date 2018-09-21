@@ -1,4 +1,4 @@
-package stag
+package stak
 
 import (
 	"fmt"
@@ -84,4 +84,35 @@ func TestRedisQueuePushPop(t *testing.T) {
 	assert.Equal(t, r4, string(b))
 	len, e = q.Len()
 	assert.Equal(t, 0, len)
+}
+
+func TestRedisMegaReadWrites(t *testing.T) {
+
+	// seed the random number generator
+	rand.Seed(time.Now().UTC().UnixNano())
+
+	// create an array and populate it with random values
+	var nums = make([]int, 2500)
+	for i := range nums {
+		nums[i] = rand.Int()
+	}
+
+	// create queue with random name
+	name := fmt.Sprintf("queue-test-%d", rand.Int())
+	q := NewRedisQueue(redis_host, redis_port, redis_db, name)
+
+	// push values into the queue
+	go func() {
+		for _, n := range nums {
+			q.Push([]byte(fmt.Sprintf("%d", n)))
+		}
+	}()
+
+	// match queue entries with random number array
+	for _, n := range nums {
+		b, err := q.PopWait(1 * time.Second)
+		assert.Nil(t, err)
+		assert.Equal(t, string(b), fmt.Sprintf("%d", n))
+	}
+
 }

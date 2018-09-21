@@ -1,4 +1,4 @@
-package stag
+package stak
 
 import (
 	"encoding/json"

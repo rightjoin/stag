@@ -1,4 +1,4 @@
-package stag
+package stak
 
 import (
 	"fmt"
@@ -7,7 +7,7 @@ import (
 
 	"github.com/rightjoin/fig"
 
-	redis "gopkg.in/redis.v3"
+	redis "gopkg.in/redis.v5"
 )
 
 type Redis struct {
@@ -19,7 +19,7 @@ type Redis struct {
 func NewRedisCache(host string, port int, db int) Redis {
 	serv := redis.NewClient(&redis.Options{
 		Addr: fmt.Sprintf("%s:%d", host, port),
-		DB:   int64(db),
+		DB:   db,
 	})
 
 	_, err := serv.Ping().Result()
@@ -35,7 +35,7 @@ func NewRedisCache(host string, port int, db int) Redis {
 func NewRedisQueue(host string, port int, db int, name string) Redis {
 	serv := redis.NewClient(&redis.Options{
 		Addr: fmt.Sprintf("%s:%d", host, port),
-		DB:   int64(db),
+		DB:   db,
 	})
 
 	_, err := serv.Ping().Result()
