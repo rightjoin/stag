@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"time"
 
-	log "github.com/rightjoin/log15"
+	log "github.com/rightjoin/slog"
 )
 
 type cacheLogger struct {
